@@ -1,0 +1,122 @@
+<!--
+Programa: Componente Móvel no Canvas
+Nome: Gabriel Santos Pires - Nº: 12 - Turma: 2°L
+Nome: Miguel Reny - Nº: 19 - Turma: 2°L
+Nome: Nicollas Augusto dos Santos Silva - Nº: 21 - Turma: 2°L
+Nome: Raul Dias - Nº: 23 - Turma: 2°L
+Nome: Renan Proença - Nº: 24 - Turma: 2°L
+DESCRIÇÃO: Este programa cria um componente interativo em um canvas que pode ser controlado pelos botões de direção, com um layout que simula um joystick.
+-->
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projeto Canvas com Movimento</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        canvas {
+            border: 1px solid black;
+            margin-left: 20px;
+        }
+        .controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-left: 20px;
+        }
+        .controls-row {
+            display: flex;
+        }
+        button {
+            padding: 10px;
+            margin: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas" width="400" height="400"></canvas>
+    <div class="controls">
+        <div class="controls-row">
+            <button id="upButton">▲</button>
+        </div>
+        <div class="controls-row">
+            <button id="leftButton">◄</button>
+            <button id="downButton">▼</button>
+            <button id="rightButton">►</button>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let x = canvas.width / 2;
+        let y = canvas.height / 2;
+        const componentSize = 20;
+        let dx = 0;
+        let dy = 0;
+        let moving = false;
+
+        function drawComponent() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#3498db'; // Cor azul para tornar o componente mais amigável
+            ctx.fillRect(x, y, componentSize, componentSize);
+        }
+
+        function updatePosition() {
+            if (moving) {
+                x += dx;
+                y += dy;
+                if (x < 0) x = 0;
+                if (x > canvas.width - componentSize) x = canvas.width - componentSize;
+                if (y < 0) y = 0;
+                if (y > canvas.height - componentSize) y = canvas.height - componentSize;
+                drawComponent();
+            }
+            requestAnimationFrame(updatePosition);
+        }
+
+        document.getElementById('leftButton').addEventListener('mousedown', () => {
+            dx = -2;
+            moving = true;
+        });
+
+        document.getElementById('rightButton').addEventListener('mousedown', () => {
+            dx = 2;
+            moving = true;
+        });
+
+        document.getElementById('upButton').addEventListener('mousedown', () => {
+            dy = -2;
+            moving = true;
+        });
+
+        document.getElementById('downButton').addEventListener('mousedown', () => {
+            dy = 2;
+            moving = true;
+        });
+
+        document.querySelectorAll('button').forEach(button => {
+            button.addEventListener('mouseup', () => {
+                dx = 0;
+                dy = 0;
+                moving = false;
+            });
+        });
+
+        drawComponent();
+        updatePosition();
+    </script>
+</body>
+</html>
+
